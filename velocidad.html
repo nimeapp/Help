@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+  <title>Speed Test Flixpe</title>
+  <style>
+    .dual-color-icon {
+      background: linear-gradient(to right, red 50%, black 50%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      display: inline-block;
+    }
+
+    .flixpe-font {
+      font-family: 'Bebas Neue', sans-serif;
+    }
+
+    .active-tab svg,
+    .active-tab span {
+      color: #a855f7 !important;
+      stroke: #a855f7 !important;
+    }
+
+    * {
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    /* Ocupa toda la altura menos el menú */
+    .full-screen-minus-nav {
+      height: calc(100vh - 56px); /* Ajusta si el menú es más alto */
+    }
+  </style>
+</head>
+<body class="bg-black m-0 font-sans">
+
+  <div class="relative w-full full-screen-minus-nav">
+    <!-- Speed Test -->
+    <iframe src="https://fast.com" class="w-full h-full border-none"></iframe>
+
+    <!-- Encabezado superior blanco -->
+    <div class="absolute top-0 left-0 w-full h-[140px] bg-white z-50 flex flex-col items-center justify-center gap-2">
+      <i data-lucide="gauge" class="w-24 h-24 dual-color-icon"></i>
+      <span class="text-4xl flixpe-font text-purple-600">Flixpe</span>
+    </div>
+
+    <!-- Cubre parte inferior detrás del menú -->
+    <div class="absolute bottom-0 left-0 w-full h-[80px] bg-white z-40"></div>
+  </div>
+
+  <!-- Menú inferior -->
+  <nav class="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-700 flex justify-around p-2 text-white text-[10px] z-50">
+    <button onclick="setActive(this, 'go:perfil')" class="flex flex-col items-center hover:opacity-90">
+      <i data-lucide="home" class="w-5 h-5"></i>
+      <span>Inicio</span>
+    </button>
+
+    <a href="https://nimeapp.github.io/Pr-ximamente/" class="flex flex-col items-center hover:opacity-90">
+      <i data-lucide="play-square" class="w-5 h-5"></i>
+      <span>Próximamente</span>
+    </a>
+
+    <button onclick="setActive(this, 'go:favoritos')" class="flex flex-col items-center hover:opacity-90">
+      <i data-lucide="heart" class="w-5 h-5"></i>
+      <span>Favorito</span>
+    </button>
+
+    <button onclick="setActive(this, 'go:inicio')" class="flex flex-col items-center hover:opacity-90">
+      <i data-lucide="settings" class="w-5 h-5"></i>
+      <span>Ajustes</span>
+    </button>
+  </nav>
+
+  <script>
+    lucide.createIcons();
+
+    function setActive(element, url) {
+      document.querySelectorAll("nav button").forEach(el => el.classList.remove("active-tab"));
+      element.classList.add("active-tab");
+      window.location.href = url;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('a').forEach(el => {
+        const url = el.getAttribute('href');
+        el.removeAttribute('href');
+        el.style.cursor = 'pointer';
+        el.onclick = () => window.location.href = url;
+      });
+    });
+  </script>
+</body>
+</html>
