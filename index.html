@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    * {
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+    .accordion-button[aria-expanded="true"] .icon-rotate {
+      transform: rotate(180deg);
+    }
+  </style>
+</head>
+<body class="bg-black text-white font-sans">
+
+  <header class="bg-gray-900 py-6 px-4 shadow-md">
+  <h1 class="text-3xl font-bold text-white flex items-center gap-2">
+    <i data-lucide="help-circle" class="w-7 h-7 text-blue-400"></i>
+    Preguntas Frecuentes (FAQ)
+  </h1>
+</header>
+
+
+  <main class="px-6 py-10 max-w-5xl mx-auto space-y-4">
+    <div class="space-y-4">
+      <details class="bg-gray-800 rounded-xl p-4 group" open>
+        <summary class="flex justify-between items-center cursor-pointer text-lg font-semibold">
+          ¿Qué es Flixpe?
+          <i data-lucide="chevron-down" class="icon-rotate transition-transform duration-300 group-open:rotate-180 w-5 h-5"></i>
+        </summary>
+        <p class="mt-2 text-gray-300">Flixpe es una aplicación para ver películas, series y anime desde tu dispositivo móvil, tablet, PC o TV.</p>
+      </details>
+
+      <details class="bg-gray-800 rounded-xl p-4 group">
+        <summary class="flex justify-between items-center cursor-pointer text-lg font-semibold">
+          ¿Cómo creo una cuenta en Flixpe?
+          <i data-lucide="chevron-down" class="icon-rotate transition-transform duration-300 group-open:rotate-180 w-5 h-5"></i>
+        </summary>
+        <p class="mt-2 text-gray-300">Debes ingresar tu correo, nombre de usuario y contraseña. Luego recibirás un correo para verificar tu cuenta.</p>
+      </details>
+
+      <details class="bg-gray-800 rounded-xl p-4 group">
+        <summary class="flex justify-between items-center cursor-pointer text-lg font-semibold">
+          ¿Puedo usar mi cuenta en varios dispositivos?
+          <i data-lucide="chevron-down" class="icon-rotate transition-transform duration-300 group-open:rotate-180 w-5 h-5"></i>
+        </summary>
+        <p class="mt-2 text-gray-300">Sí, puedes iniciar sesión con tu cuenta en diferentes dispositivos sin problema.</p>
+      </details>
+
+      <details class="bg-gray-800 rounded-xl p-4 group">
+        <summary class="flex justify-between items-center cursor-pointer text-lg font-semibold">
+          ¿Puedo ver contenido sin conexión?
+          <i data-lucide="chevron-down" class="icon-rotate transition-transform duration-300 group-open:rotate-180 w-5 h-5"></i>
+        </summary>
+        <p class="mt-2 text-gray-300">No, necesitas conexión a internet o datos móviles para ver películas, series o anime.</p>
+      </details>
+
+      <details class="bg-gray-800 rounded-xl p-4 group">
+        <summary class="flex justify-between items-center cursor-pointer text-lg font-semibold">
+          ¿Cómo gano puntos viendo anuncios?
+          <i data-lucide="chevron-down" class="icon-rotate transition-transform duration-300 group-open:rotate-180 w-5 h-5"></i>
+        </summary>
+        <p class="mt-2 text-gray-300">En la sección "Pedir Películas o Series", podrás ver anuncios. Por cada anuncio ganarás puntos que se mostrarán ahí mismo. Cuando tengas 100 puntos podrás solicitar una película desde esa sección.</p>
+      </details>
+
+      <details class="bg-gray-800 rounded-xl p-4 group">
+        <summary class="flex justify-between items-center cursor-pointer text-lg font-semibold">
+          ¿Puedo editar o eliminar mi perfil?
+          <i data-lucide="chevron-down" class="icon-rotate transition-transform duration-300 group-open:rotate-180 w-5 h-5"></i>
+        </summary>
+        <p class="mt-2 text-gray-300">Sí, desde la sección de perfil puedes editar tu información o eliminar tu perfil si lo deseas.</p>
+      </details>
+
+      <details class="bg-gray-800 rounded-xl p-4 group">
+        <summary class="flex justify-between items-center cursor-pointer text-lg font-semibold">
+          ¿Qué pasa si olvido mi contraseña?
+          <i data-lucide="chevron-down" class="icon-rotate transition-transform duration-300 group-open:rotate-180 w-5 h-5"></i>
+        </summary>
+        <p class="mt-2 text-gray-300">Puedes usar la opción "¿Olvidaste tu contraseña?" en la pantalla de inicio de sesión y seguir las instrucciones enviadas a tu correo.</p>
+      </details>
+    </div>
+  </main>
+    <br>
+  <nav class="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-700 flex justify-around p-2 text-white text-[10px]">
+    
+    <button onclick="setActive(this, 'go:perfil')" class="flex flex-col items-center hover:opacity-90">
+      <i data-lucide="home" class="w-5 h-5"></i>
+      <span>Inicio</span>
+    </button>
+
+    <a href="https://nimeapp.github.io/Pr-ximamente/" class="flex flex-col items-center hover:opacity-90">
+  <i data-lucide="play-square" class="w-5 h-5"></i>
+  <span>Próximamente</span>
+</a>
+
+    <button onclick="setActive(this, 'go:favoritos')" class="flex flex-col items-center hover:opacity-90">
+      <i data-lucide="heart" class="w-5 h-5"></i>
+      <span>Favorito</span>
+    </button>
+
+    <button onclick="setActive(this, 'go:inicio')" class="flex flex-col items-center hover:opacity-90">
+      <i data-lucide="settings" class="w-5 h-5"></i>
+      <span>Ajustes</span>
+    </button>
+
+  </nav>
+
+
+  <script>
+    lucide.createIcons();
+function setActive(element, url) {
+      // Remueve clase activa de todos
+      document.querySelectorAll("nav button").forEach(el => el.classList.remove("active-tab"));
+      
+      // Agrega clase activa al botón actual
+      element.classList.add("active-tab");
+
+      // Acción: redirigir (o puedes hacer otra cosa aquí)
+      window.location.href = url;
+    }
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('a').forEach(el => {
+        const url = el.getAttribute('href');
+        el.removeAttribute('href');
+        el.style.cursor = 'pointer';
+        el.onclick = () => window.location.href = url;
+      });
+    });
+  </script>
+
+</body>
+</html>
