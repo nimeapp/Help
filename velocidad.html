@@ -30,9 +30,37 @@
       -webkit-touch-callout: none;
     }
 
-    /* Ocupa toda la altura menos el menú */
+    /* Contenedor que ocupa toda la altura menos el menú */
     .full-screen-minus-nav {
-      height: calc(100vh - 56px); /* Ajusta si el menú es más alto */
+      height: calc(100vh - 56px); /* 56px es la altura del menú inferior */
+      position: relative;
+    }
+
+    /* Ajuste para que la capa blanca inferior sea un poco más alta y suba */
+    .bottom-white-cover {
+      position: absolute;
+      bottom: 56px; /* justo arriba del menú */
+      left: 0;
+      width: 100%;
+      height: 120px; /* más alta para cubrir logos */
+      background-color: white;
+      z-index: 40;
+    }
+
+    /* Capa blanca superior */
+    .top-white-cover {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 140px;
+      background-color: white;
+      z-index: 50;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
     }
   </style>
 </head>
@@ -43,17 +71,17 @@
     <iframe src="https://fast.com" class="w-full h-full border-none"></iframe>
 
     <!-- Encabezado superior blanco -->
-    <div class="absolute top-0 left-0 w-full h-[140px] bg-white z-50 flex flex-col items-center justify-center gap-2">
+    <div class="top-white-cover">
       <i data-lucide="gauge" class="w-24 h-24 dual-color-icon"></i>
       <span class="text-4xl flixpe-font text-purple-600">Flixpe</span>
     </div>
 
-    <!-- Cubre parte inferior detrás del menú -->
-    <div class="absolute bottom-0 left-0 w-full h-[80px] bg-white z-40"></div>
+    <!-- Cubre parte inferior justo arriba del menú y más alto para tapar logos -->
+    <div class="bottom-white-cover"></div>
   </div>
 
   <!-- Menú inferior -->
-  <nav class="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-700 flex justify-around p-2 text-white text-[10px] z-50">
+  <nav class="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-700 flex justify-around p-2 text-white text-[10px] z-50" style="height:56px;">
     <button onclick="setActive(this, 'go:perfil')" class="flex flex-col items-center hover:opacity-90">
       <i data-lucide="home" class="w-5 h-5"></i>
       <span>Inicio</span>
