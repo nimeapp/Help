@@ -30,21 +30,24 @@
       -webkit-touch-callout: none;
     }
 
+    
     .full-screen-minus-nav {
-      height: calc(100vh - 56px); 
+      height: calc(100vh - 56px);
       position: relative;
     }
 
+    
     .bottom-white-cover {
       position: absolute;
-      bottom: 56px; 
+      bottom: 0;
       left: 0;
-      width: 100%;
+      right: 0;
       height: 120px; 
       background-color: white;
       z-index: 40;
     }
 
+    
     .top-white-cover {
       position: absolute;
       top: 0;
@@ -64,13 +67,20 @@
 <body class="bg-black m-0 font-sans">
 
   <div class="relative w-full full-screen-minus-nav">
+
     <iframe src="https://fast.com" class="w-full h-full border-none"></iframe>
+
+    
     <div class="top-white-cover">
       <i data-lucide="gauge" class="w-24 h-24 dual-color-icon"></i>
       <span class="text-4xl flixpe-font text-purple-600">Flixpe</span>
     </div>
+
+
     <div class="bottom-white-cover"></div>
   </div>
+
+  <!-- Menú inferior -->
   <nav class="fixed bottom-0 left-0 right-0 bg-black border-t border-gray-700 flex justify-around p-2 text-white text-[10px] z-50" style="height:56px;">
     <button onclick="setActive(this, 'go:perfil')" class="flex flex-col items-center hover:opacity-90">
       <i data-lucide="home" class="w-5 h-5"></i>
