@@ -1,0 +1,694 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Soporte Flixpe</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet" />
+  <style>
+    body {
+      font-family: 'Bebas Neue', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #ffffff;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+    }
+
+    nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 50;
+    }
+
+    #chat-container {
+      position: absolute;
+      top: 56px; /* altura del header */
+      bottom: 64px; /* altura del nav + input */
+      left: 0;
+      right: 0;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+
+    .message {
+      animation: fadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .meta {
+      font-size: 10px;
+      color: gray;
+      margin-top: 2px;
+    }
+
+    .active-tab svg,
+    .active-tab span {
+      color: #a855f7 !important;
+      stroke: #a855f7 !important;
+    }
+
+    * {
+      -webkit-user-select: none;
+      -webkit-touch-callout: none;
+    }
+
+    form#chat-form {
+      position: absolute;
+      bottom: 48px; /* altura del nav */
+      left: 0;
+      right: 0;
+      background-color: white;
+      padding: 0.5rem;
+      display: flex;
+      gap: 0.5rem;
+      border-top: 1px solid #e5e7eb;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER fijo -->
+  <header class="bg-white px-4 py-2 flex items-center shadow space-x-3">
+    <img src="https://i.ibb.co/Q3wqyMZQ/logo-flixpe.png" alt="logo" class="w-8 h-8 rounded-full" />
+    <div class="leading-tight">
+      <h1 class="text-lg text-black">Flixpe</h1>
+      <p class="text-xs text-gray-500 -mt-0.5">Soporte al cliente de Flixpe</p>
+    </div>
+  </header>
+
+  <!-- CHAT -->
+  <main id="chat-container"></main>
+
+
+<form id="chat-form" class="flex">
+  <input id="user-input" type="text" placeholder="Escribe tu mensaje..." class="flex-1 border p-2 rounded-xl text-sm" required />
+  <button type="submit" class="bg-purple-600 text-white px-4 py-2 rounded-xl text-sm flex items-center justify-center">
+    <i data-lucide="send" class="w-5 h-5"></i>
+  </button>
+</form>
+  <!-- MENÚ inferior fijo -->
+  <nav class="bg-black border-t border-gray-700 flex justify-around p-2 text-white text-[10px]">
+    <button onclick="setActive(this, 'go:perfil')" class="flex flex-col items-center hover:opacity-90">
+      <i data-lucide="home" class="w-5 h-5"></i>
+      <span>Inicio</span>
+    </button>
+
+    <a href="https://nimeapp.github.io/Pr-ximamente/" class="flex flex-col items-center hover:opacity-90">
+      <i data-lucide="play-square" class="w-5 h-5"></i>
+      <span>Próximamente</span>
+    </a>
+
+    <button onclick="setActive(this, 'go:favoritos')" class="flex flex-col items-center hover:opacity-90">
+      <i data-lucide="heart" class="w-5 h-5"></i>
+      <span>Favorito</span>
+    </button>
+
+    <button onclick="setActive(this, 'go:inicio')" class="flex flex-col items-center hover:opacity-90">
+      <i data-lucide="settings" class="w-5 h-5"></i>
+      <span>Ajustes</span>
+    </button>
+  </nav>
+
+  
+  <script>
+    lucide.createIcons();
+
+    function setActive(element, url) {
+      document.querySelectorAll("nav button").forEach(el => el.classList.remove("active-tab"));
+      element.classList.add("active-tab");
+      window.location.href = url;
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('a').forEach(el => {
+        const url = el.getAttribute('href');
+        el.removeAttribute('href');
+        el.style.cursor = 'pointer';
+        el.onclick = () => window.location.href = url;
+      });
+    });
+
+    const nombresConF = [
+  "Fabiano", "Fabien", "Fabio", "Fabián", "Fabrice", "Fabrizio", "Facundo",
+  "Fael", "Fausto", "Favio", "Fayez", "Fayt", "Faysal", "Federico", "Fedor",
+  "Feid", "Felipe", "Feliciano", "Felino", "Félix", "Feleti", "Fenton",
+  "Ferdinando", "Ferdinand", "Fermín", "Fernán", "Fernando", "Feivel",
+  "Fey", "Feysal", "Fidencio", "Fidel", "Filemón", "Filiberto", "Filomeno",
+  "Filadelfo", "Filipe", "Filippo", "Fiodor", "Firmino", "Firuz", "Fitz",
+  "Flavio", "Florencio", "Florentino", "Florin", "Floyd", "Fonso", "Fortunato",
+  "Francesc", "Francesco", "Francis", "Francisco", "Franco", "François",
+  "Frank", "Frankie", "Franklin", "Frans", "Franz", "Fred", "Freddie",
+  "Freddy", "Frederic", "Frederick", "Fredo", "Fredy", "Froilán", "Fulberto",
+  "Fulgen", "Fulgencio", "Fulton"
+];
+
+    const nombreBot = nombresConF[Math.floor(Math.random() * nombresConF.length)];
+
+    function momentoDelDia() {
+      const h = new Date().getHours();
+      if (h >= 5 && h < 12) return "mañana";
+      if (h >= 12 && h < 19) return "tarde";
+      return "noche";
+    }
+
+    function getHoraActual() {
+      const ahora = new Date();
+      const horas = ahora.getHours().toString().padStart(2, '0');
+      const minutos = ahora.getMinutes().toString().padStart(2, '0');
+      return `${horas}:${minutos}`;
+    }
+
+    const chat = document.getElementById('chat-container');
+    const form = document.getElementById('chat-form');
+    const input = document.getElementById('user-input');
+
+    const respuestas = [
+{
+  claves: ["gracias", "gracia", "gracias!", "graciass", "gracais", "grasias", "grasias!", "graciasss", "grasiass"],
+  respuesta: "¡De nada! Estamos aquí para ayudarte siempre que lo necesites."
+},
+
+      
+  {
+    claves: ["como descargar", "cmo descargar", "¿como descargar", "descargar", "komo descargar"],
+    respuesta: "Haz clic en el botón de descarga para iniciar la descarga del Video."
+  },
+  {
+    claves: ["hola", "ola", "holaa", "holi"],
+    respuesta: "¡Hola! ¿En qué puedo ayudarte?"
+  },
+  {
+    claves: ["no puedo ver", "no carga el video", "error al reproducir", "el video no inicia"],
+    respuesta: "Revisa tu conexión a internet o intenta reiniciar la aplicación."
+  },
+  {
+    claves: ["no puedo registrarme", "error al registrarme", "registrarse no funciona"],
+    respuesta: "Verifica que tu correo no haya sido usado antes y que todos los campos estén completos."
+  },
+  {
+    claves: ["como iniciar sesión", "entrar a mi cuenta", "login", "loguearme"],
+    respuesta: "Haz clic en 'Iniciar sesión' e ingresa tu correo y contraseña registrados."
+  },
+  {
+    claves: ["no me llega el correo", "correo de confirmacion", "validar cuenta", "correo no recibido"],
+    respuesta: "Revisa la bandeja de spam o espera unos minutos. Si no llega, intenta reenviarlo desde la app."
+  },
+  {
+    claves: ["como cambiar mi perfil", "editar perfil", "modificar mi perfil"],
+    respuesta: "Ve a tu perfil y selecciona la opción 'Editar perfil' para cambiar nombre o imagen."
+  },
+  {
+    claves: ["eliminar perfil", "borrar perfil"],
+    respuesta: "Accede al perfil que deseas eliminar y pulsa en la opción 'Eliminar perfil'."
+  },
+  {
+    claves: ["tiene perfiles", "crear perfil", "cuantos perfiles puedo tener"],
+    respuesta: "Sí, puedes crear perfiles como en Netflix para separar contenido por usuario."
+  },
+  {
+    claves: ["hay que iniciar sesion", "es necesario iniciar sesion", "puedo entrar sin cuenta"],
+    respuesta: "Sí, es necesario registrarse e iniciar sesión para usar Flixpe."
+  },
+  {
+    claves: ["hay version premium", "tienen version sin anuncios", "es gratis flixpe"],
+    respuesta: "Flixpe es gratis con anuncios. También puedes pagar para eliminarlos con la versión premium."
+  },
+  {
+    claves: ["tiene contacto", "tienen soporte", "como contacto soporte"],
+    respuesta: "Puedes contactar por correo electrónico o mediante este chat de soporte."
+  },
+  {
+    claves: ["puedo ver anime", "anime disponible", "ver anime aqui"],
+    respuesta: "Sí, puedes ver anime, series y películas desde tu cuenta."
+  },
+  {
+    claves: ["tienen temporadas", "hay capitulos", "hay peliculas"],
+    respuesta: "Sí, Flixpe tiene temporadas, capítulos, películas, anime y series."
+  },
+  {
+    claves: ["puedo descargar", "descargar episodios", "descargar capitulos"],
+    respuesta: "Sí, puedes ver online o descargar para ver más tarde."
+  },
+  {
+    claves: ["el video se detiene", "se congela el video", "buffering"],
+    respuesta: "Eso puede deberse a tu conexión a internet. Intenta cambiar de red o reiniciar el router."
+  },
+  {
+    claves: ["idioma", "audio", "subtitulos", "no puedo cambiar idioma"],
+    respuesta: "Actualmente no se puede cambiar el idioma ni activar subtítulos."
+  },
+  {
+    claves: ["agregar a favoritos", "no puedo añadir a favoritos", "lista de favoritos"],
+    respuesta: "Ve al contenido y presiona el ícono de estrella para añadir a favoritos."
+  },
+  {
+    claves: ["no puedo restablecer mi contraseña", "olvide mi contraseña", "resetear contraseña"],
+    respuesta: "Utiliza la opción '¿Olvidaste tu contraseña?' y sigue los pasos con tu correo."
+  },
+  {
+    claves: ["ver por genero", "anime por genero", "series por categoria"],
+    respuesta: "Sí, puedes ver el contenido por géneros desde la sección correspondiente."
+  },
+  {
+    claves: ["puedo usar flixpe en tv", "smart tv", "tv box", "android tv"],
+    respuesta: "Sí, Flixpe es compatible con Android TV y TV Box."
+  },
+  {
+    claves: ["se puede usar en pc", "usar flixpe en computadora"],
+    respuesta: "Sí, puedes usar Flixpe desde el navegador en tu computadora."
+  },
+  {
+    claves: ["actualizaciones", "cada cuanto se actualiza", "nuevos capitulos"],
+    respuesta: "El contenido se actualiza semanalmente. Activa las notificaciones para enterarte."
+  },
+  {
+    claves: ["hay anuncios", "tiene publicidad", "porque salen anuncios"],
+    respuesta: "Flixpe es gratis gracias a los anuncios. Puedes eliminarlos con la versión premium."
+  },
+  {
+    claves: ["mi cuenta fue bloqueada", "no puedo entrar", "suspension de cuenta"],
+    respuesta: "Verifica tu correo para ver si hubo alguna infracción o contáctanos por soporte."
+  },
+  {
+    claves: ["como pagar premium", "activar premium", "precio del premium"],
+    respuesta: "Desde tu perfil ve a la sección 'Premium' para ver los planes y métodos de pago."
+  },
+  {
+    claves: ["puedo usar en varios dispositivos", "multidispositivo", "cuantos dispositivos"],
+    respuesta: "Sí, puedes usar Flixpe hasta en 3 dispositivos con la misma cuenta."
+  },
+  {
+    claves: ["como cerrar sesion", "salir de mi cuenta"],
+    respuesta: "Desde el menú, selecciona 'Cerrar sesión'."
+  },
+  {
+    claves: ["hay version iOS", "esta en iphone", "app store"],
+    respuesta: "Estamos trabajando en una versión para iOS. Actualmente solo disponible para Android."
+  },
+  {
+    claves: ["como descargar en pc", "descargar desde navegador", "descarga web"],
+    respuesta: "Usa el botón de descarga disponible junto al reproductor en la web."
+  },
+  {
+    claves: ["hay censura", "contenido censurado", "contenido bloqueado"],
+    respuesta: "Flixpe ofrece contenido sin censura siempre que cumpla con nuestras políticas."
+  },
+  {
+    claves: ["me aparece error 404", "no encuentra contenido", "pagina no disponible"],
+    respuesta: "Ese error indica que el contenido fue eliminado o movido. Intenta buscarlo de nuevo."
+  },
+  {
+    claves: ["no puedo agregar perfil", "crear nuevo perfil no funciona"],
+    respuesta: "Asegúrate de haber iniciado sesión. Desde el menú puedes crear hasta 4 perfiles."
+  },
+  {
+    claves: ["como activar notificaciones", "notificaciones de nuevos capitulos"],
+    respuesta: "Desde tu perfil, activa las notificaciones para recibir alertas de nuevo contenido."
+  },
+  {
+    claves: ["no puedo cambiar imagen de perfil", "foto de perfil no se actualiza"],
+    respuesta: "Sube una imagen en formato JPG o PNG desde el editor de perfil."
+  },
+  {
+    claves: ["como buscar anime", "busqueda no funciona", "no encuentro lo que quiero ver"],
+    respuesta: "Usa la lupa de búsqueda y escribe el nombre exacto o parcial del contenido."
+  },
+  {
+    claves: ["porque pide correo", "correo obligatorio"],
+    respuesta: "El correo es necesario para validar tu cuenta y recuperar tu contraseña en caso de pérdida."
+  },
+  {
+    claves: ["mi pantalla se queda en blanco", "pantalla en negro", "no se carga nada"],
+    respuesta: "Reinicia la app o borra la caché de la aplicación desde los ajustes del dispositivo."
+  },
+  {
+    claves: ["flixpe es seguro", "es confiable", "es legal flixpe"],
+    respuesta: "Sí, Flixpe es una plataforma segura y protegida para ver contenido."
+  },
+  {
+    claves: ["hay peliculas dobladas", "contenido en español", "audio latino"],
+    respuesta: "Flixpe ofrece contenido principalmente en idioma original. No se puede cambiar el idioma."
+  },
+  {
+    claves: ["hay filtros por año", "buscar por año", "contenido por año"],
+    respuesta: "Actualmente no hay filtro por año, pero puedes buscar por título o género."
+  },
+  {
+    claves: ["tienen calendario", "cuando sale nuevo episodio", "programacion"],
+    respuesta: "Próximamente se integrará un calendario con las fechas de nuevos lanzamientos."
+  },
+  {
+    claves: ["flixpe tiene app", "app oficial", "donde descargo flixpe"],
+    respuesta: "Sí, puedes descargar la app desde nuestra web oficial o desde tiendas autorizadas."
+  },
+  {
+    claves: ["me pueden ayudar", "ayuda", "necesito ayuda", "soporte"],
+    respuesta: "¡Por supuesto! Estoy aquí para ayudarte. Escribe tu pregunta."
+  },
+  {
+    claves: ["que puedo ver", "contenido disponible", "que hay en flixpe"],
+    respuesta: "Puedes ver anime, series, películas y más, totalmente gratis o con opción premium."
+  },
+  {
+    claves: ["cuantos capitulos tiene", "numero de capitulos", "duracion de la serie"],
+    respuesta: "Cada serie muestra su cantidad de episodios en la ficha de información."
+  },
+  {
+    claves: ["no tengo espacio", "descarga falla", "no descarga nada"],
+    respuesta: "Asegúrate de tener suficiente espacio de almacenamiento en tu dispositivo."
+  },
+  {
+    claves: ["puedo usar sin internet", "ver sin conexion", "modo offline"],
+    respuesta: "Solo el contenido descargado previamente puede verse sin conexión."
+  },
+  {
+    claves: ["contenido infantil", "hay para niños", "contenido para menores"],
+    respuesta: "Sí, puedes crear perfiles con control parental para limitar el contenido según edad."
+  },
+  {
+    claves: ["tienen anuncios emergentes", "popup", "publicidad molesta"],
+    respuesta: "Flixpe evita los anuncios intrusivos para ofrecerte la mejor experiencia posible."
+  },
+{
+  claves: ["puedo ver sin internet", "internet","sin internet","sin conexión", "ver offline", "modo sin conexión"],
+  respuesta: "Actualmente necesitas estar conectado a internet para ver contenido en Flixpe."
+},
+{
+  claves: ["puedo crear varios perfiles", "crear más perfiles", "varios usuarios", "multiples perfiles"],
+  respuesta: "Sí, puedes crear varios perfiles en una sola cuenta, como en Netflix."
+},
+{
+  claves: ["hay contenido en español", "idioma español", "contenido doblado", "audio español"],
+  respuesta: "Flixpe reproduce contenido en su idioma original. Por el momento, no puedes cambiar el idioma ni activar subtítulos."
+},
+{
+  claves: ["cómo editar perfil", "modificar perfil", "cambiar nombre perfil"],
+  respuesta: "Inicia sesión, ve a la sección de perfiles y selecciona 'Editar'. Ahí puedes modificar el nombre o imagen del perfil."
+},
+{
+  claves: ["como eliminar un perfil", "quitar perfil", "borrar perfil"],
+  respuesta: "Desde la sección de perfiles, selecciona el que deseas eliminar y haz clic en 'Eliminar perfil'."
+},
+{
+  claves: ["qué incluye la versión premium", "premium que ofrece", "beneficios premium"],
+  respuesta: "La versión premium elimina los anuncios y permite una experiencia más fluida. El contenido es el mismo que en la versión gratuita."
+},
+{
+  claves: ["cómo contactar soporte", "tienen soporte", "ayuda real", "correo soporte"],
+  respuesta: "Sí, puedes escribirnos directamente desde la sección de contacto en la app o al correo soporte@flixpe.com."
+},
+{
+  claves: ["hay películas también", "solo anime", "películas disponibles", "ver películas"],
+  respuesta: "Sí, en Flixpe puedes ver anime, series y películas en línea o descargarlas."
+},
+{
+  claves: ["se puede ver por géneros", "ordenar por género", "categorías", "ver categorías"],
+  respuesta: "Sí, puedes buscar contenido por géneros desde la sección de exploración o búsqueda avanzada."
+},
+{
+  claves: ["cómo agregar a favoritos", "guardar capítulo", "añadir a mi lista"],
+  respuesta: "Al reproducir un capítulo o película, haz clic en el icono de corazón para agregarlo a tu lista de favoritos."
+},
+{
+  claves: ["cómo restablecer contraseña", "olvidé mi contraseña", "recuperar cuenta"],
+  respuesta: "Haz clic en '¿Olvidaste tu contraseña?' en la página de inicio de sesión y sigue las instrucciones."
+},
+{
+  claves: ["el video no carga", "no puedo ver", "pantalla negra", "video bloqueado"],
+  respuesta: "A veces puede ser tu conexión o un enlace caído. Prueba recargar o verificar tu conexión."
+},
+{
+  claves: ["hay anuncios", "ver sin anuncios", "quitar publicidad"],
+  respuesta: "Sí, la versión gratuita tiene anuncios. Puedes optar por la versión premium para eliminarlos."
+},
+{
+  claves: ["cómo cambiar contraseña", "modificar contraseña", "actualizar clave"],
+  respuesta: "Inicia sesión, ve a tu perfil y elige la opción de seguridad para cambiar tu contraseña."
+},
+{
+  claves: ["qué es Flixpe", "para qué sirve Flixpe", "qué hace Flixpe"],
+  respuesta: "Flixpe es una app para ver anime, series y películas. Puedes crear perfiles, marcar favoritos y más."
+},
+{
+  claves: ["puedo compartir mi cuenta", "usar en varios dispositivos", "cuentas compartidas"],
+  respuesta: "Puedes usar tu cuenta en varios dispositivos, pero no simultáneamente en más de dos."
+},
+{
+  claves: ["no me llegó el correo de confirmación", "no puedo validar mi cuenta", "problema con correo"],
+  respuesta: "Revisa tu carpeta de spam o correo no deseado. Si no llega, puedes reenviar desde la app."
+},
+{
+  claves: ["por qué me saca de la app", "se cierra sola", "la app se cierra"],
+  respuesta: "Asegúrate de tener la última versión de Flixpe. Si persiste, prueba reinstalar la aplicación."
+},
+{
+  claves: ["en qué dispositivos funciona", "qué dispositivos soporta", "pc, móvil, tv"],
+  respuesta: "Flixpe funciona en móviles, tablets, computadoras y algunos dispositivos TV compatibles."
+},
+{
+  claves: ["puedo poner control parental", "modo niño", "restringir contenido"],
+  respuesta: "Pronto habilitaremos control parental para que el contenido sea seguro para los niños."
+},
+{
+  claves: ["puedo cambiar mi correo", "modificar email", "actualizar correo"],
+  respuesta: "Por ahora no es posible cambiar el correo. Debes crear una nueva cuenta si deseas usar otro."
+},
+{
+  claves: ["la app está en la Play Store", "descargar desde playstore", "está en la tienda"],
+  respuesta: "Actualmente Flixpe está disponible solo mediante descarga directa desde nuestro sitio web."
+},
+{
+  claves: ["cómo buscar un anime", "cómo encontrar contenido", "buscar serie"],
+  respuesta: "Usa la barra de búsqueda para escribir el título del contenido que deseas ver."
+},
+{
+  claves: ["puedo poner en pantalla completa", "modo full", "ver en pantalla completa"],
+  respuesta: "Sí, cuando reproduzcas un video, toca el icono de pantalla completa."
+},
+{
+  claves: ["puedo usar Chromecast", "enviar a mi TV", "ver en smart tv"],
+  respuesta: "Estamos trabajando para habilitar compatibilidad con Chromecast. Pronto estará disponible."
+},
+{
+  claves: ["qué significa error 404", "error al buscar", "enlace roto"],
+  respuesta: "El error 404 aparece cuando el contenido no existe o fue eliminado. Intenta buscar otro título."
+},
+{
+  claves: ["cómo cerrar sesión", "cerrar mi cuenta", "salir de Flixpe"],
+  respuesta: "Ve al menú de perfil y selecciona 'Cerrar sesión'."
+},
+{
+  claves: ["el chat no funciona", "no responde el bot", "problemas con soporte"],
+  respuesta: "Revisa tu conexión. Si el problema persiste, contacta por correo a soporte@flixpe.com."
+},
+{
+  claves: ["los subtítulos no aparecen", "no hay subtítulos", "activar subtítulos"],
+  respuesta: "Actualmente Flixpe no permite cambiar idioma ni activar subtítulos."
+},
+{
+  claves: ["puedo actualizar mi app", "nueva versión", "actualizar flixpe"],
+  respuesta: "Visita nuestro sitio web oficial para descargar la última versión disponible."
+},
+{
+  claves: ["cómo elimino mi cuenta", "borrar cuenta", "cerrar cuenta"],
+  respuesta: "Para eliminar tu cuenta, contáctanos por correo desde el email con el que te registraste."
+},
+{
+  claves: ["cuántos capítulos hay", "cuántas temporadas", "todo el anime está"],
+  respuesta: "Depende del anime o serie. Puedes ver temporadas y capítulos desde la sección del contenido."
+},
+{
+  claves: ["por qué hay capítulos incompletos", "faltan episodios", "faltan partes"],
+  respuesta: "A veces estamos actualizando contenido. Vuelve a intentar más tarde o reporta el error."
+},
+{
+  claves: ["qué hago si mi perfil no carga", "perfil no aparece", "no abre mi perfil"],
+  respuesta: "Intenta cerrar sesión y volver a entrar. Si persiste, contacta a soporte."
+},
+{
+  claves: ["puedo ver anime reciente", "últimos capítulos", "estrenos disponibles"],
+  respuesta: "Sí, Flixpe se actualiza frecuentemente con estrenos y últimos episodios disponibles."
+},
+{
+  claves: ["por qué veo muchos anuncios", "demasiados anuncios", "anuncios molestos"],
+  respuesta: "Puedes eliminar anuncios activando la versión premium desde tu cuenta."
+},
+{
+  claves: ["se puede ver sin registrarse", "ver sin cuenta", "ver sin login"],
+  respuesta: "No, debes registrarte e iniciar sesión para acceder a todo el contenido de Flixpe."
+},
+{
+  claves: ["cómo actualizar mis datos", "modificar información", "editar cuenta"],
+  respuesta: "Desde tu perfil puedes editar algunos datos como nombre o contraseña."
+},
+{
+  claves: ["hay contenido hentai", "contenido para adultos", "anime para adultos"],
+  respuesta: "Flixpe no incluye contenido hentai. Todo el contenido es apto para adolescentes y adultos."
+},
+{
+  claves: ["hay una app para iOS", "disponible en iphone", "versión para apple"],
+  respuesta: "Por ahora solo está disponible para Android. Pronto lanzaremos la versión para iOS."
+},
+{
+  claves: ["qué pasa si olvido cerrar sesión", "alguien entra a mi cuenta", "seguridad de mi cuenta"],
+  respuesta: "Tu sesión se cierra automáticamente después de un tiempo. Te recomendamos no compartir tu contraseña."
+},
+{
+  claves: ["cómo cambio de perfil", "seleccionar otro perfil", "entrar con otro perfil"],
+  respuesta: "En la pantalla principal, selecciona el perfil actual para cambiar o agregar otro."
+},
+{
+  claves: ["el buscador no encuentra", "no aparecen resultados", "buscar no funciona"],
+  respuesta: "Asegúrate de escribir bien el título. También puedes usar palabras clave."
+},
+{
+  claves: ["me aparece pantalla en blanco", "no carga nada", "pantalla vacía"],
+  respuesta: "Intenta cerrar y volver a abrir la app. Si persiste, actualiza a la última versión."
+},
+{
+  claves: ["cómo compartir contenido", "mandar a un amigo", "enviar link"],
+  respuesta: "Desde el reproductor puedes copiar el enlace para compartirlo con tus amigos."
+},
+{
+  claves: ["hay estrenos semanales", "actualizan seguido", "contenido nuevo"],
+  respuesta: "Sí, Flixpe se actualiza cada semana con nuevo contenido de anime, series y películas."
+},
+{
+  claves: ["puedo dejar comentarios", "dejar opinión", "comentar capítulos"],
+  respuesta: "Por el momento no hay una sección de comentarios, pero estará disponible próximamente."
+},
+{
+  claves: ["qué velocidad de internet necesito", "se ve lento", "requiere buen internet"],
+  respuesta: "Recomendamos al menos 5 Mbps para ver contenido sin interrupciones."
+}
+
+
+];
+
+
+    function normalizarTexto(texto) {
+      return texto
+        .toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+        .replace(/[¿?¡!.,]/g, "")
+        .replace(/[^a-z0-9\s]/gi, '')
+        .replace(/\s+/g, ' ')
+        .trim();
+    }
+
+    function buscarRespuesta(textoNormalizado) {
+      for (let item of respuestas) {
+        for (let clave of item.claves) {
+          if (textoNormalizado.includes(clave)) {
+            return item.respuesta;
+          }
+        }
+      }
+      return "Lo siento, no entiendo tu mensaje.";
+    }
+
+    function scrollBottom() {
+      chat.scrollTop = chat.scrollHeight;
+    }
+
+    function agregarMensaje(texto, autor = "usuario") {
+      const contenedor = document.createElement('div');
+      contenedor.className = `flex ${autor === "bot" ? "items-start" : "justify-end"} space-x-2 message`;
+      const hora = getHoraActual();
+
+      if (autor === "bot") {
+        contenedor.innerHTML = `
+          <img src="https://i.ibb.co/Q3wqyMZQ/logo-flixpe.png" class="w-7 h-7 rounded-full">
+          <div>
+            <div class="bg-gray-100 p-2 rounded-xl text-black text-sm max-w-xs">${texto}</div>
+            <div class="meta">${nombreBot} • ${hora}</div>
+          </div>
+        `;
+      } else {
+        contenedor.innerHTML = `
+          <div>
+            <div class="bg-purple-600 text-white p-2 rounded-xl text-sm max-w-xs">${texto}</div>
+            <div class="meta text-right">${hora}</div>
+          </div>
+        `;
+      }
+
+      chat.appendChild(contenedor);
+      scrollBottom();
+    }
+
+    window.onload = () => {
+      const saludo = `Hola, mi nombre es ${nombreBot}, ¿en qué puedo ayudarte esta ${momentoDelDia()}?`;
+      agregarMensaje(saludo, "bot");
+    };
+
+    form.onsubmit = e => {
+      e.preventDefault();
+      const msg = input.value.trim();
+      if (!msg) return;
+
+      agregarMensaje(msg, "usuario");
+      input.value = "";
+
+      const typing = document.createElement('div');
+      typing.className = 'flex items-start space-x-2 message';
+      typing.innerHTML = `
+        <img src="https://i.ibb.co/Q3wqyMZQ/logo-flixpe.png" class="w-7 h-7 rounded-full">
+        <div>
+          <div class="bg-gray-100 p-2 rounded-xl text-gray-400 italic text-sm max-w-xs">Escribiendo...</div>
+          <div class="meta">${nombreBot} • ${getHoraActual()}</div>
+        </div>
+      `;
+      chat.appendChild(typing);
+      scrollBottom();
+
+      setTimeout(() => {
+        typing.remove();
+        const normalizado = normalizarTexto(msg);
+        const respuesta = buscarRespuesta(normalizado);
+        agregarMensaje(respuesta, "bot");
+      }, 1000);
+    };
+
+  // Bloquear clic derecho
+  document.addEventListener('contextmenu', function (e) {
+    e.preventDefault();
+  });
+
+  // Bloquear teclas F12, Ctrl+Shift+I, Ctrl+U, Ctrl+Shift+J, Ctrl+S, Ctrl+P
+  document.addEventListener('keydown', function (e) {
+    if (
+      e.key === 'F12' ||
+      (e.ctrlKey && e.shiftKey && ['I', 'J', 'C'].includes(e.key.toUpperCase())) ||
+      (e.ctrlKey && ['U', 'S', 'P'].includes(e.key.toUpperCase()))
+    ) {
+      e.preventDefault();
+    }
+  });
+
+  // Bloquear menú desde click derecho largo (por si algún navegador no lo previene)
+  window.oncontextmenu = function () {
+    return false;
+  };
+
+  </script>
+</body>
+</html>
+	
