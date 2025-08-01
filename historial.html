@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Historial</title>
+  <style>
+    body { background: #111; color: white; font-family: sans-serif; padding: 1rem; }
+    .item { margin-bottom: 1rem; }
+    .item img { width: 100px; border-radius: 8px; }
+  </style>
+</head>
+<body>
+  <h1>Tu historial</h1>
+  <div id="historial"></div>
+
+  <script>
+    const IMG_BASE = "https://image.tmdb.org/t/p/w500";
+    const contenedor = document.getElementById("historial");
+    const historial = JSON.parse(localStorage.getItem("historialVisto")) || [];
+    const ahora = Date.now();
+    const HISTORIA_LIMIT = 72 * 60 * 60 * 1000; // 72 horas
+
+    // Filtrar y limpiar
+    const actualizado = historial.filter(item => ahora - item.timestamp < HISTORIA_LIMIT);
+    localStorage.setItem("historialVisto", JSON.stringify(actualizado));
+
+    // Mostrar
+    actualizado.forEach(item => {
+      const div = document.createElement("div");
+      div.className = "item";
+      div.innerHTML = `
+        <img src="${IMG_BASE + item.poster}" alt="Poster">
+        <p>ID: ${item.id} | Tipo: ${item.type}</p>
+      `;
+      contenedor.appendChild(div);
+    });
+  </script>
+</body>
+</html>
